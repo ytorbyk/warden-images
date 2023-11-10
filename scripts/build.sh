@@ -55,7 +55,7 @@ if [[ ${PUSH_FLAG} != 0 && ${PRE_AUTH:-0} != 1 ]]; then
 fi
 
 ## define image repository to push
-WARDEN_IMAGE_REPOSITORY="${WARDEN_IMAGE_REPOSITORY:-"docker.io/wardenenv"}"
+WARDEN_IMAGE_REPOSITORY="${WARDEN_IMAGE_REPOSITORY:-"docker.io/ytorbyk"}"
 
 docker buildx create --use
 

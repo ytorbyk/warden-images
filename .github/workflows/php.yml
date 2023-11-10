@@ -53,7 +53,7 @@ jobs:
         env:
           BUILD_GROUP: php-fpm
           PRE_AUTH: 1
-          WARDEN_IMAGE_REPOSITORY: ghcr.io/wardenenv
+          WARDEN_IMAGE_REPOSITORY: ghcr.io/${{ github.repository_owner }}
           PHP_SOURCE_IMAGE: ghcr.io/wardenenv/centos-php
           PUSH_FLAG: 1
           PHP_VERSION: ${{ matrix.php_version }}
@@ -95,7 +95,7 @@ jobs:
         env:
           BUILD_GROUP: php-fpm/magento1
           PRE_AUTH: 1
-          WARDEN_IMAGE_REPOSITORY: ghcr.io/wardenenv
+          WARDEN_IMAGE_REPOSITORY: ghcr.io/${{ github.repository_owner }}
           PHP_SOURCE_IMAGE: ghcr.io/wardenenv/centos-php
           PUSH_FLAG: 1
           PHP_VERSION: ${{ matrix.php_version }}
@@ -137,7 +137,7 @@ jobs:
         env:
           BUILD_GROUP: php-fpm/magento2
           PRE_AUTH: 1
-          WARDEN_IMAGE_REPOSITORY: ghcr.io/wardenenv
+          WARDEN_IMAGE_REPOSITORY: ghcr.io/${{ github.repository_owner }}
           PHP_SOURCE_IMAGE: ghcr.io/wardenenv/centos-php
           PUSH_FLAG: 1
           PHP_VERSION: ${{ matrix.php_version }}
