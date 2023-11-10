@@ -39,4 +39,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           build-args: WEBPROC_VERSION=0.4.0
           push: ${{ github.ref == 'refs/heads/main' && !env.ACT }}
-          tags: ghcr.io/${{ github.repository_owner }}/dnsmasq:latest, wardenenv/dnsmasq:latest
+          tags: ghcr.io/${{ github.repository_owner }}/dnsmasq:latest,${{ secrets.IMAGE_REPOSITORY }}/dnsmasq:latest
