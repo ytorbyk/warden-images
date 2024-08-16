@@ -28,7 +28,7 @@ jobs:
       - name: Build & Push Images
         env:
           PRE_AUTH: 1
-          IMAGE_NAME: ghcr.io/wardenenv/centos-php
+          IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/centos-php
           VERSION_LIST: 7.4 8.0
           VARIANT_LIST: cli cli-loaders fpm fpm-loaders
           PUSH_FLAG: 1
@@ -49,7 +49,7 @@ jobs:
       - name: Build & Push Images
         env:
           PRE_AUTH: 1
-          IMAGE_NAME: ghcr.io/wardenenv/centos-php
+          IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/centos-php
           VERSION_LIST: 8.1 8.2 8.3
           VARIANT_LIST: cli cli-loaders fpm fpm-loaders
           PUSH_FLAG: 1
@@ -78,7 +78,7 @@ jobs:
           BUILD_GROUP: php-fpm
           PRE_AUTH: 1
           WARDEN_IMAGE_REPOSITORY: ghcr.io/${{ github.repository_owner }}
-          PHP_SOURCE_IMAGE: ghcr.io/wardenenv/centos-php
+          PHP_SOURCE_IMAGE: ghcr.io/${{ github.repository_owner }}/centos-php
           PUSH_FLAG: 1
           PHP_VERSION: ${{ matrix.php_version }}
           PHP_VARIANT: ${{ matrix.php_variant }}
@@ -92,7 +92,7 @@ jobs:
         env:
           BUILD_GROUP: php-fpm
           PRE_AUTH: 1
-          PHP_SOURCE_IMAGE: ghcr.io/wardenenv/centos-php
+          PHP_SOURCE_IMAGE: ghcr.io/${{ github.repository_owner }}/centos-php
           PUSH_FLAG: 1
           PHP_VERSION: ${{ matrix.php_version }}
           PHP_VARIANT: ${{ matrix.php_variant }}
@@ -121,7 +121,7 @@ jobs:
           BUILD_GROUP: php-fpm/magento1
           PRE_AUTH: 1
           WARDEN_IMAGE_REPOSITORY: ghcr.io/${{ github.repository_owner }}
-          PHP_SOURCE_IMAGE: ghcr.io/wardenenv/centos-php
+          PHP_SOURCE_IMAGE: ghcr.io/${{ github.repository_owner }}/centos-php
           PUSH_FLAG: 1
           PHP_VERSION: ${{ matrix.php_version }}
           PHP_VARIANT: ${{ matrix.php_variant }}
@@ -135,7 +135,7 @@ jobs:
         env:
           BUILD_GROUP: php-fpm/magento1
           PRE_AUTH: 1
-          PHP_SOURCE_IMAGE: ghcr.io/wardenenv/centos-php
+          PHP_SOURCE_IMAGE: ghcr.io/${{ github.repository_owner }}/centos-php
           PUSH_FLAG: 1
           PHP_VERSION: ${{ matrix.php_version }}
           PHP_VARIANT: ${{ matrix.php_variant }}
@@ -164,7 +164,7 @@ jobs:
           BUILD_GROUP: php-fpm/magento2
           PRE_AUTH: 1
           WARDEN_IMAGE_REPOSITORY: ghcr.io/${{ github.repository_owner }}
-          PHP_SOURCE_IMAGE: ghcr.io/wardenenv/centos-php
+          PHP_SOURCE_IMAGE: ghcr.io/${{ github.repository_owner }}/centos-php
           PUSH_FLAG: 1
           PHP_VERSION: ${{ matrix.php_version }}
           PHP_VARIANT: ${{ matrix.php_variant }}
@@ -178,7 +178,7 @@ jobs:
         env:
           BUILD_GROUP: php-fpm/magento2
           PRE_AUTH: 1
-          PHP_SOURCE_IMAGE: ghcr.io/wardenenv/centos-php
+          PHP_SOURCE_IMAGE: ghcr.io/${{ github.repository_owner }}/centos-php
           PUSH_FLAG: 1
           PHP_VERSION: ${{ matrix.php_version }}
           PHP_VARIANT: ${{ matrix.php_variant }}
