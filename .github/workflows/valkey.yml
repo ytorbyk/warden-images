@@ -46,4 +46,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           build-args: VALKEY_VERSION=${{ matrix.version }}
           push: ${{ github.ref == 'refs/heads/main' && !env.ACT }}
-          tags: ghcr.io/${{ github.repository_owner }}/valkey:${{ matrix.version }},wardenenv/valkey:${{matrix.version}}
+          tags: ghcr.io/${{ github.repository_owner }}/valkey:${{ matrix.version }},${{ secrets.IMAGE_REPOSITORY }}/valkey:${{matrix.version}}

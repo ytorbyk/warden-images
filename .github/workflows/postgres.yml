@@ -77,9 +77,9 @@ jobs:
 
       - uses: docker/build-push-action@v6
         with:
-          context: postgres 
+          context: postgres
           platforms: linux/amd64,linux/arm64
           build-args: POSTGRES_VERSION=${{ env.POSTGRES_VERSION }}
           push: ${{ github.ref == 'refs/heads/main' && !env.ACT }}
-          tags: ghcr.io/${{ github.repository_owner }}/postgres:${{ matrix.version }},wardenenv/postgres:${{matrix.version}}
+          tags: ghcr.io/${{ github.repository_owner }}/postgres:${{ matrix.version }},${{ secrets.IMAGE_REPOSITORY }}/postgres:${{matrix.version}}
 

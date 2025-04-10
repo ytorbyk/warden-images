@@ -46,12 +46,12 @@ on:
         description: JSON-encoded array of registries to push to
         required: true
         type: string
-        default: '["ghcr.io/wardenenv"]'
+        default: '["ghcr.io/ytorbyk"]'
       php_source_image:
         description: The source image to use for the PHP image
         required: true
         type: string
-        default: "ghcr.io/wardenenv/centos-php"
+        default: "ghcr.io/ytorbyk/centos-php"
       image_authors:
         description: The authors of the image
         required: true
@@ -61,12 +61,12 @@ on:
         description: Warden Image Repository
         required: true
         type: string
-        default: "ghcr.io/wardenenv"
+        default: "ghcr.io/ytorbyk"
       dockerhub_username:
         description: DockerHub repository / user name
         required: true
         type: string
-        default: "wardenenv"
+        default: "ytorbyk"
       push2dockerhub:
         description: Push to Docker Hub?
         required: true
