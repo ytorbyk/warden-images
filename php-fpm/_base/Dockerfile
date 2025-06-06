@@ -2,9 +2,6 @@ ARG PHP_SOURCE_IMAGE="ghcr.io/wardenenv/centos-php"
 ARG PHP_VERSION="8.4"
 ARG PHP_VARIANT="fpm-loaders"
 
-FROM golang:alpine AS mhs-builder
-RUN go install github.com/axllent/mailpit/sendmail@latest
-
 FROM ${PHP_SOURCE_IMAGE}:${PHP_VERSION}-${PHP_VARIANT}
 
 # Clear undesired settings from base fpm images
@@ -33,7 +30,8 @@ COPY etc/php.d/*.ini /etc/php.d/
 COPY etc/php.d/05-additions.ini.template /etc/php.d/
 
 # Install mhsendmail to support routing email through mailhog
-COPY --from=mhs-builder /go/bin/sendmail /usr/local/bin/mhsendmail
+RUN sh < <(curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh)
+RUN mv /usr/local/bin/mailpit /usr/local/bin/mhsendmail
 
 # Install awscli to support data backfill workflows using S3 storage; segno for QR code generation
 RUN pip3 install awscli segno --no-cache-dir
