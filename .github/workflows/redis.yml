@@ -2,7 +2,7 @@ name: Docker Image Redis
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * *" # 6 AM Daily
+    - cron: "0 20 * * *" # 8 PM Daily
   push:
     paths:
       - redis/**

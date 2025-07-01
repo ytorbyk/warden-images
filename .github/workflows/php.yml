@@ -11,7 +11,7 @@ on:
         required: true
         default: "true"
   schedule:
-    - cron: "0 6 * * *" # 6 AM Daily
+    - cron: "0 20 * * *" # 8 PM Daily
   push:
     branches:
       - main
