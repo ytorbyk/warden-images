@@ -14,7 +14,7 @@ ENV MAILHOG_PORT=1025
 ENV NODE_VERSION=20
 
 RUN dnf install -y which pv sudo bind-utils python3-pip bash-completion rsync socat oathtool \
-        wget ack make gcc gcc-c++ automake autoconf crontabs mariadb nano vim coreutils-common \
+        wget ack make gcc gcc-c++ automake autoconf crontabs mariadb nano vim coreutils-common supervisor \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
