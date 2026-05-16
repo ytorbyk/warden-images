@@ -97,14 +97,14 @@ jobs:
           platform=${{ matrix.platform }}
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
           echo "full_php_version=$(jq -cr --arg majorVers "${{ inputs.php_version }}" '.[$majorVers]' <<< '${{ inputs.php_version_map }}')" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v5
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+      - uses: actions/checkout@v6
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         if: inputs.push2dockerhub
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -125,7 +125,7 @@ jobs:
           METADATA_DIR: ${{ runner.temp }}/metadata
         run: bash php-fpm/scripts/build.sh "${BUILD_GROUP}"
       - name: Push Metadata Files
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: metadata-${{ inputs.php_version }}-${{ matrix.build_group }}-${{ matrix.variant }}-${{ env.PLATFORM_PAIR }}
           path: ${{ runner.temp }}/metadata/*
@@ -145,19 +145,19 @@ jobs:
             - ${{ inputs.php_version }}
         registry: ${{ fromJSON(inputs.registries) }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Download metadata
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           path: ${{ runner.temp }}/metadata
           pattern: metadata-${{ matrix.php_version}}-${{ matrix.build_group }}-${{ matrix.variant }}-*
           merge-multiple: true
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         if: inputs.push2dockerhub
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -196,14 +196,14 @@ jobs:
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
           echo "sanitizedBuildGroup=$(echo "${{ matrix.build_group}}" | tr / _)" >> $GITHUB_ENV
           echo "full_php_version=$(jq -cr --arg majorVers "${{ inputs.php_version }}" '.[$majorVers]' <<< '${{ inputs.php_version_map }}')" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v5
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+      - uses: actions/checkout@v6
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         if: inputs.push2dockerhub
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -225,7 +225,7 @@ jobs:
           METADATA_DIR: ${{ runner.temp }}/metadata
         run: bash php-fpm/scripts/build.sh "${BUILD_GROUP}"
       - name: Push Metadata Files
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: metadata-${{ inputs.php_version }}-${{ env.sanitizedBuildGroup }}-${{ matrix.variant }}-${{ env.PLATFORM_PAIR }}
           path: ${{ runner.temp }}/metadata/*
@@ -245,23 +245,23 @@ jobs:
           - ${{ inputs.php_version }}
         registry: ${{ fromJSON(inputs.registries) }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Prepare
         id: prepare
         run: |
           echo "sanitizedBuildGroup=$(echo "${{ matrix.build_group}}" | tr / _)" >> $GITHUB_ENV
       - name: Download metadata
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           path: ${{ runner.temp }}/metadata
           pattern: metadata-${{ inputs.php_version}}-${{ env.sanitizedBuildGroup }}-${{ matrix.variant }}-*
           merge-multiple: true
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         if: inputs.push2dockerhub
         with:
           username: ${{ secrets.DOCKER_USERNAME }}

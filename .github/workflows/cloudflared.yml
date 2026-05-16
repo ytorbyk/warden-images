@@ -1,23 +1,17 @@
-name: Docker Image MailHog
+name: Docker Image Cloudflared
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 6 * * *" # 6 AM Daily
   push:
     paths:
-      - mailhog/**
-      - .github/workflows/mailhog.yml
+      - cloudflared/**
+      - .github/workflows/cloudflared.yml
 
 jobs:
-  mailhog:
-    name: MailHog
+  cloudflared:
+    name: Cloudflared
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        version:
-          - "1.0"
 
     steps:
       - uses: actions/checkout@v6
@@ -41,8 +35,7 @@ jobs:
 
       - uses: docker/build-push-action@v7
         with:
-          context: mailhog
+          context: cloudflared
           platforms: linux/amd64,linux/arm64
-          build-args: MAILHOG_VERSION=${{ matrix.version }}
           push: ${{ github.ref == 'refs/heads/main' && !env.ACT }}
-          tags: ghcr.io/${{ github.repository_owner }}/mailhog:${{ matrix.version }},${{ secrets.IMAGE_REPOSITORY }}/mailhog:${{ matrix.version }}
+          tags: ghcr.io/${{ github.repository_owner }}/cloudflared:latest, wardenenv/cloudflared:latest
