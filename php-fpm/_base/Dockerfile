@@ -4,6 +4,13 @@ ARG PHP_VARIANT="fpm-loaders"
 
 FROM ${PHP_SOURCE_IMAGE}:${PHP_VERSION}-${PHP_VARIANT}
 
+ARG PHP_VERSION
+
+# OPcache is built into PHP 8.5+ core; remove the ini shipped by the base image
+RUN if [ "$(echo "${PHP_VERSION}" | awk -F. '{print $1*100+$2}')" -gt "804" ]; then \
+        rm -f /etc/php.d/10-opcache.ini; \
+    fi
+
 # Clear undesired settings from base fpm images
 ENV COMPOSER_ALLOW_SUPERUSER=""
 ENV COMPOSER_HOME=""

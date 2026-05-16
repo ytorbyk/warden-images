@@ -18,12 +18,16 @@ RUN set -eux \
     && perl -pi -e 's/^(memory_limit)=.*$/$1=1G/g' /etc/php-fpm-fcgi.ini \
     && perl -pi -e 's/^(realpath_cache_size)=.*$/$1=4096K/g' /etc/php-fpm-fcgi.ini \
     && perl -pi -e 's/^(realpath_cache_ttl)=.*$/$1=600/g' /etc/php-fpm-fcgi.ini \
-    && perl -pi -e 's/^(opcache\.enable)=.*$/$1=1/g' /etc/php.d/10-opcache.ini \
-    && perl -pi -e 's/^(opcache\.enable_cli)=.*$/$1=0/g' /etc/php.d/10-opcache.ini \
-    && perl -pi -e 's/^(opcache\.memory_consumption)=.*$/$1=512/g' /etc/php.d/10-opcache.ini \
-    && perl -pi -e 's/^(opcache\.interned_strings_buffer)=.*$/$1=32/g' /etc/php.d/10-opcache.ini \
-    && perl -pi -e 's/^(opcache\.max_accelerated_files)=.*$/$1=32531/g' /etc/php.d/10-opcache.ini \
-    && perl -pi -e 's/^(opcache\.save_comments)=.*$/$1=1/g' /etc/php.d/10-opcache.ini
+    && OPCACHE_INI=/etc/php.d/10-opcache.ini \
+    && if [ ! -f "${OPCACHE_INI}" ]; then \
+           printf '[opcache]\nzend_extension=opcache.so\nopcache.enable=0\nopcache.enable_cli=0\nopcache.memory_consumption=128\nopcache.interned_strings_buffer=8\nopcache.max_accelerated_files=10000\nopcache.save_comments=1\n' > "${OPCACHE_INI}"; \
+       fi \
+    && perl -pi -e 's/^;?\s*(opcache\.enable)\s*=.*$/$1=1/g' "${OPCACHE_INI}" \
+    && perl -pi -e 's/^;?\s*(opcache\.enable_cli)\s*=.*$/$1=0/g' "${OPCACHE_INI}" \
+    && perl -pi -e 's/^;?\s*(opcache\.memory_consumption)\s*=.*$/$1=512/g' "${OPCACHE_INI}" \
+    && perl -pi -e 's/^;?\s*(opcache\.interned_strings_buffer)\s*=.*$/$1=32/g' "${OPCACHE_INI}" \
+    && perl -pi -e 's/^;?\s*(opcache\.max_accelerated_files)\s*=.*$/$1=32531/g' "${OPCACHE_INI}" \
+    && perl -pi -e 's/^;?\s*(opcache\.save_comments)\s*=.*$/$1=1/g' "${OPCACHE_INI}"
 
 RUN mkdir -p /var/log/supervisor \
     && chown www-data:www-data /var/log/supervisor
