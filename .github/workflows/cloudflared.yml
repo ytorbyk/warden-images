@@ -38,4 +38,4 @@ jobs:
           context: cloudflared
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' && !env.ACT }}
-          tags: ghcr.io/${{ github.repository_owner }}/cloudflared:latest, wardenenv/cloudflared:latest
+          tags: ghcr.io/${{ github.repository_owner }}/cloudflared:latest,${{secrets.IMAGE_REPOSITORY}}/cloudflared:latest
