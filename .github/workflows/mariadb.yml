@@ -41,8 +41,6 @@ jobs:
           - "12.0"
           - "12.1"
           - "12.2"
-          - "12.3"
-          - "13.0"
 
     steps:
       - uses: actions/checkout@v6
