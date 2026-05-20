@@ -18,3 +18,8 @@ fileExistenceTests:
   - name: "IonCube Config Exists"
     path: "/etc/php.d/01-ioncube-loader.ini"
     shouldExist: true
+
+fileContentTests:
+  - name: "OpCache Config Only"
+    path: "/etc/php.d/10-opcache.ini"
+    excludedContents: ['^zend_extension=.*']
