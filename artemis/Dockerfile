@@ -1,0 +1,2 @@
+ARG ARTEMIS_VERSION
+FROM apache/artemis:${ARTEMIS_VERSION}-alpine

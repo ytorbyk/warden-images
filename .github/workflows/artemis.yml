@@ -1,0 +1,48 @@
+name: Docker Image Artemis
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *" # 6 AM Daily
+  push:
+    paths:
+      - artemis/**
+      - .github/workflows/artemis.yml
+
+jobs:
+  valkey:
+    name: Artemis ActiveMQ
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - "2"
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: docker/setup-qemu-action@v4
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ !env.ACT }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+        if: ${{ !env.ACT }}
+
+      - uses: docker/build-push-action@v7
+        with:
+          context: valkey
+          platforms: linux/amd64,linux/arm64
+          build-args: ARTEMIS_VERSION=${{ matrix.version }}
+          push: ${{ github.ref == 'refs/heads/main' && !env.ACT }}
+          tags: ghcr.io/${{ github.repository_owner }}/valkey:${{ matrix.version }},wardenenv/valkey:${{matrix.version}}
