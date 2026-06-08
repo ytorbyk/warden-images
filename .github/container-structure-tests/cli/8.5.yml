@@ -35,3 +35,8 @@ commandTests:
     args: ["-m"]
     excludedOutput:
       - "(?m)^swoole"
+
+fileContentTests:
+  - name: "OpCache Config Only"
+    path: "/etc/php.d/10-opcache.ini"
+    excludedContents: ['^zend_extension=.*']
