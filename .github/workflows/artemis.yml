@@ -1,17 +1,23 @@
-name: Docker Image Cloudflared
+name: Docker Image Artemis
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 6 * * *" # 6 AM Daily
   push:
     paths:
-      - cloudflared/**
-      - .github/workflows/cloudflared.yml
+      - artemis/**
+      - .github/workflows/artemis.yml
 
 jobs:
-  cloudflared:
-    name: Cloudflared
+  artemis:
+    name: Artemis ActiveMQ
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - "2"
 
     steps:
       - uses: actions/checkout@v7
@@ -33,9 +39,19 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
         if: ${{ !env.ACT }}
 
+      - name: Set build-args
+        run: |-
+          ESCAPED_VERSION="$(echo ${{ matrix.version }} | sed 's/\./\\\./g')"
+          ARTEMIS_VERSION=$(
+            docker run --rm gcr.io/go-containerregistry/crane ls apache/artemis \
+            | egrep "^${ESCAPED_VERSION}\.[0-9]+(\.[0-9]+)?\$" | sort -Vr | head -n1
+          )
+          echo "ARTEMIS_VERSION=${ARTEMIS_VERSION}" | tee /dev/stderr >> $GITHUB_ENV
+
       - uses: docker/build-push-action@v7
         with:
-          context: cloudflared
+          context: artemis
           platforms: linux/amd64,linux/arm64
+          build-args: ARTEMIS_VERSION=${{ env.ARTEMIS_VERSION }}
           push: ${{ github.ref == 'refs/heads/main' && !env.ACT }}
-          tags: ghcr.io/${{ github.repository_owner }}/cloudflared:latest,${{secrets.IMAGE_REPOSITORY}}/cloudflared:latest
+          tags: ghcr.io/${{ github.repository_owner }}/artemis:${{ matrix.version }},wardenenv/artemis:${{matrix.version}}

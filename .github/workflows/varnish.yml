@@ -1,4 +1,4 @@
-name: Docker Image Varnish
+name: Docker Image Vinyl Cache
 on:
   workflow_dispatch:
   schedule:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   varnish:
-    name: Varnish
+    name: Vinyl Cache
     runs-on: ubuntu-latest
 
     strategy:
@@ -29,7 +29,7 @@ jobs:
           - "8.0"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: docker/setup-qemu-action@v4
       - uses: docker/setup-buildx-action@v4
 
@@ -66,7 +66,7 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/varnish:${{ matrix.version }},${{ secrets.IMAGE_REPOSITORY }}/varnish:${{matrix.version}}
 
   varnish-lts:
-    name: Varnish LTS
+    name: Vinyl Non-alpine (LTS)
     runs-on: ubuntu-latest
 
     strategy:
@@ -74,9 +74,10 @@ jobs:
       matrix:
         version:
           - "6.0"
+          - "9.0"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: docker/setup-qemu-action@v4
       - uses: docker/setup-buildx-action@v4
 
