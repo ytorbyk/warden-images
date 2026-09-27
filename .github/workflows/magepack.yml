@@ -11,7 +11,7 @@ on:
 jobs:
   magepack:
     name: Magepack
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
 
     strategy:
       fail-fast: false
@@ -26,10 +26,15 @@ jobs:
           - "2.9"
           - "2.10"
           - "2.11"
+        platform: [linux/amd64, linux/arm64]
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@v7
-      - uses: docker/setup-qemu-action@v4
       - uses: docker/setup-buildx-action@v4
 
       - name: Login to Github Container Registry
@@ -48,9 +53,84 @@ jobs:
         if: ${{ !env.ACT }}
 
       - uses: docker/build-push-action@v7
+        id: build
         with:
           context: magepack
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
           build-args: MAGEPACK_VERSION=${{ matrix.version }}
-          push: ${{ github.ref == 'refs/heads/main' && !env.ACT }}
-          tags: ghcr.io/${{ github.repository_owner }}/magepack:${{ matrix.version }},${{ secrets.IMAGE_REPOSITORY }}/magepack:${{ matrix.version }}
+          outputs: >-
+            type=image,"name=ghcr.io/${{ github.repository_owner }}/magepack,${{ secrets.IMAGE_REPOSITORY }}/magepack",push-by-digest=true,name-canonical=true,push=${{ github.ref == 'refs/heads/main' && !env.ACT }}
+
+      - name: Export digest
+        if: github.ref == 'refs/heads/main' && !env.ACT
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          mkdir -p "${{ runner.temp }}/digests"
+          touch "${{ runner.temp }}/digests/${DIGEST#sha256:}"
+
+      - uses: actions/upload-artifact@v7
+        if: github.ref == 'refs/heads/main' && !env.ACT
+        with:
+          name: digests-magepack-${{ matrix.version }}-${{ matrix.runner }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    name: Publish multi-platform image
+    needs: magepack
+    if: github.ref == 'refs/heads/main' && !cancelled()
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - "2.3"
+          - "2.4"
+          - "2.5"
+          - "2.6"
+          - "2.7"
+          - "2.8"
+          - "2.9"
+          - "2.10"
+          - "2.11"
+    steps:
+      - uses: actions/download-artifact@v8
+        if: ${{ !env.ACT }}
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-magepack-${{ matrix.version }}-*
+          merge-multiple: true
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        if: ${{ !env.ACT }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/login-action@v4
+        if: ${{ !env.ACT }}
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Publish manifests
+        if: ${{ !env.ACT }}
+        working-directory: ${{ runner.temp }}/digests
+        env:
+          GHCR_IMAGE: ghcr.io/${{ github.repository_owner }}/magepack
+          DOCKERHUB_IMAGE: ${{ secrets.IMAGE_REPOSITORY }}/magepack
+          VERSION: ${{ matrix.version }}
+        run: |
+          digests=(*)
+          if [[ ${#digests[@]} -ne 2 ]]; then
+            echo "Expected one digest from each architecture" >&2
+            exit 1
+          fi
+          for image in "$GHCR_IMAGE" "$DOCKERHUB_IMAGE"; do
+            sources=()
+            for digest in *; do
+              sources+=("${image}@sha256:${digest}")
+            done
+            docker buildx imagetools create --tag "${image}:${VERSION}" "${sources[@]}"
+          done
