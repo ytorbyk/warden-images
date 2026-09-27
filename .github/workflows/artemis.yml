@@ -54,4 +54,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           build-args: ARTEMIS_VERSION=${{ env.ARTEMIS_VERSION }}
           push: ${{ github.ref == 'refs/heads/main' && !env.ACT }}
-          tags: ghcr.io/${{ github.repository_owner }}/artemis:${{ matrix.version }},wardenenv/artemis:${{matrix.version}}
+          tags: ghcr.io/${{ github.repository_owner }}/artemis:${{ matrix.version }},${{secrets.IMAGE_REPOSITORY}}/artemis:${{matrix.version}}
