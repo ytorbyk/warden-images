@@ -48,11 +48,13 @@ jobs:
           - "8.16"
           - "8.17"
           - "8.18"
+          - "8.19"
           - "9.0"
           - "9.1"
           - "9.2"
           - "9.3"
           - "9.4"
+          - "9.5"
     steps:
       - uses: actions/checkout@v7
       - uses: docker/setup-qemu-action@v4

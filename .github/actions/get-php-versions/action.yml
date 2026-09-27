@@ -15,5 +15,5 @@ outputs:
   php_stable_versions:
     description: The PHP versions that are actively receiving features and security updates
 runs:
-  using: node20
+  using: node24
   main: dist/index.js
